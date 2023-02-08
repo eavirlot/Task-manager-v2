@@ -74,7 +74,9 @@ namespace Task_manager_v2
             {
                 File.Create(filePath);
             }
+            try { 
             string[] lines = File.ReadAllLines(filePath);
+
             foreach (string line in lines)
             {
                 string[] parts = line.Split(';');
@@ -94,6 +96,11 @@ namespace Task_manager_v2
                 File.Create(tasksFile);
             }
             MessageBox.Show("Пользователь успешно создан");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Это не нормально, но прошу, просто перезапустите программу и авторизуйтесь с теми же данными. Ошибка: " + ex.Message);
+            }
         }
     }
 }
