@@ -14,6 +14,7 @@ namespace Task_manager_v2
     public partial class MainForm : Form
     {
         private string _username;
+        private string _originalTaskName;
         public MainForm(string username)
         {
             InitializeComponent();
@@ -31,8 +32,10 @@ namespace Task_manager_v2
             {
                 return;
             }
-
+            
             string name = listBox.SelectedItem.ToString();
+            _originalTaskName = listBox.SelectedItem.ToString();
+            //Console.WriteLine(_originalTaskName);
             string filePath = _username + "_tasks.txt";
             string[] lines = File.ReadAllLines(filePath);
             foreach (string line in lines)
@@ -45,13 +48,15 @@ namespace Task_manager_v2
 
                 if (parts[1] == name)
                 {
+                    
                     string status = parts[0];
                     string artist = parts[2];
                     string date = parts[3];
                     DateTime taskDate = DateTime.Parse(date);
                     string description = parts[4];
 
-                    TaskEdit taskEdit = new TaskEdit(_username, name, artist, taskDate, description);
+                    TaskEdit taskEdit = new TaskEdit(_username, status, name, artist, taskDate, description, _originalTaskName);
+                    taskEdit.IsEditMode = true;
                     taskEdit.ShowDialog();
                     LoadTasks();
                     break;
@@ -67,8 +72,8 @@ namespace Task_manager_v2
         private void add_task_Click(object sender, EventArgs e)
         {
             DateTime today = DateTime.Now;
-            TaskEdit taskEdit = new TaskEdit(_username, "", "", today,"");
-           
+            TaskEdit taskEdit = new TaskEdit(_username,"", "", "", today,"","");
+            taskEdit.IsEditMode = false;
             taskEdit.ShowDialog();
         }
         private void LoadTasks()
