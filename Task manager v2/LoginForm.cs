@@ -32,30 +32,40 @@ namespace Task_manager_v2
                 MessageBox.Show("Пользователь не найден");
                 return;
             }
-            string[] lines = File.ReadAllLines(filePath);
-            bool found = false;
-            foreach (string line in lines)
+            try
             {
-                string[] parts = line.Split(';');
-                if (parts[0] == username)
+                using (var fileStream = new StreamReader(filePath))
                 {
-                    found = true;
-                    if (parts[1] != password)
+                    bool found = false;
+                    while (!fileStream.EndOfStream)
                     {
-                        MessageBox.Show("Неправильный пароль");
+                        string line = fileStream.ReadLine();
+                        string[] parts = line.Split(';');
+                        if (parts[0] == username)
+                        {
+                            found = true;
+                            if (parts[1] != password)
+                            {
+                                MessageBox.Show("Неправильный пароль");
+                                return;
+                            }
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        MessageBox.Show("Пользователь не найден");
                         return;
                     }
-                    break;
+                    MainForm mainForm = new MainForm(username);
+                    mainForm.Show();
+                    this.Hide();
                 }
             }
-            if (!found)
+            catch (Exception ex)
             {
-                MessageBox.Show("Пользователь не найден");
-                return;
+                MessageBox.Show("Error: " + ex.Message);
             }
-            MainForm mainForm = new MainForm(username);
-            mainForm.Show();
-            this.Hide();
         }
 
 
@@ -70,37 +80,49 @@ namespace Task_manager_v2
                 return;
             }
             string filePath = "task_manager_users.txt";
-            if (!File.Exists(filePath))
+            try
             {
-                File.Create(filePath);
-            }
-            try { 
-            string[] lines = File.ReadAllLines(filePath);
-
-            foreach (string line in lines)
-            {
-                string[] parts = line.Split(';');
-                if (parts[0] == username)
+                using (var fileStream = File.OpenRead(filePath))
                 {
-                    MessageBox.Show("Имя пользователя уже используется");
-                    return;
+                    string[] lines = File.ReadAllLines(filePath);
+
+                    foreach (string line in lines)
+                    {
+                        string[] parts = line.Split(';');
+                        if (parts[0] == username)
+                        {
+                            MessageBox.Show("Имя пользователя уже используется");
+                            return;
+                        }
+                    }
                 }
-            }
-            using (StreamWriter sw = File.AppendText(filePath))
-            {
-                sw.WriteLine(username + ";" + password);
-            }
-            string tasksFile = username + "_tasks.txt";
-            if (!File.Exists(tasksFile))
-            {
-                File.Create(tasksFile);
-            }
-            MessageBox.Show("Пользователь успешно создан");
+                string tasksFile = username + "_tasks.txt";
+                if (!File.Exists(tasksFile))
+                {
+                    File.Create(tasksFile).Close();
+                }
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine(username + ";" + password);
+                }
+
+                MessageBox.Show("Пользователь успешно создан");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Это не нормально, но прошу, просто перезапустите программу и авторизуйтесь с теми же данными. Ошибка: " + ex.Message);
             }
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            string filePath = "task_manager_users.txt";
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+            }
+          
         }
     }
 }
