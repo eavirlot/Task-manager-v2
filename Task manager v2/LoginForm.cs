@@ -124,5 +124,10 @@ namespace Task_manager_v2
             }
           
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

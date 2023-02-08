@@ -98,6 +98,7 @@
             this.label4.Size = new System.Drawing.Size(55, 15);
             this.label4.TabIndex = 7;
             this.label4.Text = "ПИ-C-21";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // LoginForm
             // 
