@@ -15,18 +15,23 @@ namespace Task_manager_v2
     {
         private string _username;
         private string _originalTaskName;
+        private Rectangle dragBoxFromMouseDown;
+
         public MainForm(string username)
         {
             InitializeComponent();
+            
             _username = username;
             LoadTasks();
             listBox1.DoubleClick += ListBox_DoubleClick;
             listBox2.DoubleClick += ListBox_DoubleClick;
             listBox3.DoubleClick += ListBox_DoubleClick;
+
         }
 
         private void ListBox_DoubleClick(object sender, EventArgs e)
         {
+
             ListBox listBox = sender as ListBox;
             if (listBox.SelectedItem == null)
             {
@@ -66,7 +71,7 @@ namespace Task_manager_v2
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void add_task_Click(object sender, EventArgs e)
@@ -76,7 +81,7 @@ namespace Task_manager_v2
             taskEdit.IsEditMode = false;
             taskEdit.ShowDialog();
         }
-        private void LoadTasks()
+        public void LoadTasks()
         {
             listBox1.Items.Clear();
             listBox2.Items.Clear();
@@ -116,6 +121,204 @@ namespace Task_manager_v2
                         break;
                 }
             }
+        }
+
+        private void listBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            string taskName = e.Data.GetData(DataFormats.StringFormat).ToString();
+            string status = "to_do";
+            UpdateTaskStatus(taskName, status);
+            LoadTasks();
+        }
+
+        private void listBox2_DragDrop(object sender, DragEventArgs e)
+        {
+            string taskName = e.Data.GetData(DataFormats.StringFormat).ToString();
+            string status = "InProgress";
+            UpdateTaskStatus(taskName, status);
+            LoadTasks();
+        }
+
+        private void listBox3_DragDrop(object sender, DragEventArgs e)
+        {
+            string taskName = e.Data.GetData(DataFormats.StringFormat).ToString();
+            string status = "Done";
+            UpdateTaskStatus(taskName, status);
+            LoadTasks();
+        }
+
+        private void listBox1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void listBox2_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void listBox3_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void listBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // Get the size of the drag rectangle.
+                Size dragSize = SystemInformation.DragSize;
+
+                // Create a rectangle using the DragSize, with the mouse position being
+                // at the center of the rectangle.
+                dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
+            }
+        }
+        
+
+        private void listBox2_MouseDown(object sender, MouseEventArgs e)
+        {
+            /*            ListBox listBox = sender as ListBox;
+                        if (listBox.SelectedItem == null)
+                        {
+                            return;
+                        }
+
+                        string taskName = listBox.SelectedItem.ToString();
+                        DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);*/
+
+            // Get the size of the drag rectangle.
+            Size dragSize = SystemInformation.DragSize;
+
+            // Create a rectangle using the DragSize, with the mouse position being
+            // at the center of the rectangle.
+            dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
+
+        }
+
+        private void listBox3_MouseDown(object sender, MouseEventArgs e)
+        {
+/*            ListBox listBox = sender as ListBox;
+            if (listBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            string taskName = listBox.SelectedItem.ToString();
+            DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);*/
+
+                 // Get the size of the drag rectangle.
+                Size dragSize = SystemInformation.DragSize;
+
+                // Create a rectangle using the DragSize, with the mouse position being
+                // at the center of the rectangle.
+                dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
+
+        }
+
+        private void UpdateTaskStatus(string taskName, string status)
+        {
+            string filePath = _username + "_tasks.txt";
+            string[] lines = File.ReadAllLines(filePath);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] parts = lines[i].Split(';');
+                if (parts.Length != 5)
+                {
+                    continue;
+                }
+
+                if (parts[1] == taskName)
+                {
+                    lines[i] = status + ";" + taskName + ";" + parts[2] + ";" + parts[3] + ";" + parts[4];
+                    break;
+                }
+            }
+
+            File.WriteAllLines(filePath, lines);
+        }
+
+        private void listBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // If the mouse moves outside the rectangle, start the drag.
+                if (dragBoxFromMouseDown != Rectangle.Empty && !dragBoxFromMouseDown.Contains(e.X, e.Y))
+                {
+                    ListBox listBox = sender as ListBox;
+                    if (listBox.SelectedItem == null)
+                    {
+                        return;
+                    }
+
+                    string taskName = listBox.SelectedItem.ToString();
+                    DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void listBox2_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // If the mouse moves outside the rectangle, start the drag.
+                if (dragBoxFromMouseDown != Rectangle.Empty && !dragBoxFromMouseDown.Contains(e.X, e.Y))
+                {
+                    ListBox listBox = sender as ListBox;
+                    if (listBox.SelectedItem == null)
+                    {
+                        return;
+                    }
+
+                    string taskName = listBox.SelectedItem.ToString();
+                    DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void listBox3_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // If the mouse moves outside the rectangle, start the drag.
+                if (dragBoxFromMouseDown != Rectangle.Empty && !dragBoxFromMouseDown.Contains(e.X, e.Y))
+                {
+                    ListBox listBox = sender as ListBox;
+                    if (listBox.SelectedItem == null)
+                    {
+                        return;
+                    }
+
+                    string taskName = listBox.SelectedItem.ToString();
+                    DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -53,6 +53,7 @@ namespace Task_manager_v2
             File.AppendAllText(filePath, "to_do" + ";" + taskName + ";" + taskArtist + ";" + taskDate + ";" + taskDescription + Environment.NewLine);
             MessageBox.Show("Task added successfully.");
             this.Close();
+            //LoadTasks();
         }
 
         public bool IsEditMode
@@ -96,6 +97,7 @@ namespace Task_manager_v2
 
             File.WriteAllLines(filePath, lines);
             Close();
+            
         }
     }
 
