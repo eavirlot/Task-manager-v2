@@ -20,7 +20,7 @@ namespace Task_manager_v2
         public MainForm(string username)
         {
             InitializeComponent();
-            
+
             _username = username;
             LoadTasks();
             listBox1.DoubleClick += ListBox_DoubleClick;
@@ -37,7 +37,7 @@ namespace Task_manager_v2
             {
                 return;
             }
-            
+
             string name = listBox.SelectedItem.ToString();
             _originalTaskName = listBox.SelectedItem.ToString();
             //Console.WriteLine(_originalTaskName);
@@ -53,7 +53,7 @@ namespace Task_manager_v2
 
                 if (parts[1] == name)
                 {
-                    
+
                     string status = parts[0];
                     string artist = parts[2];
                     string date = parts[3];
@@ -77,7 +77,7 @@ namespace Task_manager_v2
         private void add_task_Click(object sender, EventArgs e)
         {
             DateTime today = DateTime.Now;
-            TaskEdit taskEdit = new TaskEdit(_username,"", "", "", today,"","");
+            TaskEdit taskEdit = new TaskEdit(_username, "", "", "", today, "", "");
             taskEdit.IsEditMode = false;
             taskEdit.ShowDialog();
             LoadTasks();
@@ -93,36 +93,45 @@ namespace Task_manager_v2
             {
                 return;
             }
-
-            string[] lines = File.ReadAllLines(filePath);
-            foreach (string line in lines)
+            try
             {
-                string[] parts = line.Split(';');
-                if (parts.Length != 5)
+                string[] lines = File.ReadAllLines(filePath);
+                foreach (string line in lines)
                 {
-                    continue;
-                }
+                    string[] parts = line.Split(';');
+                    if (parts.Length != 5)
+                    {
+                        continue;
+                    }
 
-                string status = parts[0];
-                string name = parts[1];
-                string artist = parts[2];
-                string date = parts[3];
-                string description = parts[4];
+                    string status = parts[0];
+                    string name = parts[1];
+                    string artist = parts[2];
+                    string date = parts[3];
+                    string description = parts[4];
 
-                switch (status)
-                {
-                    case "to_do":
-                        listBox1.Items.Add(name);
-                        break;
-                    case "InProgress":
-                        listBox2.Items.Add(name);
-                        break;
-                    case "Done":
-                        listBox3.Items.Add(name);
-                        break;
+                    switch (status)
+                    {
+                        case "to_do":
+                            listBox1.Items.Add(name);
+                            break;
+                        case "InProgress":
+                            listBox2.Items.Add(name);
+                            break;
+                        case "Done":
+                            listBox3.Items.Add(name);
+                            break;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Это не нормально, но прошу, просто перезапустите программу, авторизуйтесь с теми же данными. Ошибка: " + ex.Message);
+            }
         }
+
+
+
 
         private void listBox1_DragDrop(object sender, DragEventArgs e)
         {
