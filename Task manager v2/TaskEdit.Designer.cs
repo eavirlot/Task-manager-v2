@@ -141,7 +141,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dateTimePicker1);
             this.Name = "TaskEdit";
-            this.Text = "TaskEdit";
+            this.Text = "Редактор";
             this.ResumeLayout(false);
             this.PerformLayout();
 

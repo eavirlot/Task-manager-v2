@@ -80,6 +80,7 @@ namespace Task_manager_v2
             TaskEdit taskEdit = new TaskEdit(_username,"", "", "", today,"","");
             taskEdit.IsEditMode = false;
             taskEdit.ShowDialog();
+            LoadTasks();
         }
         public void LoadTasks()
         {
@@ -195,18 +196,9 @@ namespace Task_manager_v2
                 dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
             }
         }
-        
 
         private void listBox2_MouseDown(object sender, MouseEventArgs e)
         {
-            /*            ListBox listBox = sender as ListBox;
-                        if (listBox.SelectedItem == null)
-                        {
-                            return;
-                        }
-
-                        string taskName = listBox.SelectedItem.ToString();
-                        DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);*/
 
             // Get the size of the drag rectangle.
             Size dragSize = SystemInformation.DragSize;
@@ -219,14 +211,6 @@ namespace Task_manager_v2
 
         private void listBox3_MouseDown(object sender, MouseEventArgs e)
         {
-/*            ListBox listBox = sender as ListBox;
-            if (listBox.SelectedItem == null)
-            {
-                return;
-            }
-
-            string taskName = listBox.SelectedItem.ToString();
-            DragDropEffects result = listBox.DoDragDrop(taskName, DragDropEffects.Copy);*/
 
                  // Get the size of the drag rectangle.
                 Size dragSize = SystemInformation.DragSize;
@@ -319,6 +303,35 @@ namespace Task_manager_v2
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void delete_Click(object sender, EventArgs e)
+        {
+            ListBox listBox = listBox3;
+            if (listBox.SelectedItem == null)
+            {
+                return;
+            }
+            string taskName = listBox.SelectedItem.ToString();
+            string filePath = _username + "_tasks.txt";
+            string[] lines = File.ReadAllLines(filePath);
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (string line in lines)
+                {
+                    string[] parts = line.Split(';');
+                    if (parts.Length != 5)
+                    {
+                        continue;
+                    }
+                    if (parts[1] == taskName)
+                    {
+                        continue;
+                    }
+                    writer.WriteLine(line);
+                }
+            }
+            LoadTasks();
         }
     }
 }

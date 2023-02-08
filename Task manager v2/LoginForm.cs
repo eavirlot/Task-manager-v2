@@ -23,13 +23,13 @@ namespace Task_manager_v2
             string password = textBox2.Text;
             if (username.Length == 0 || password.Length == 0)
             {
-                MessageBox.Show("Username and password cannot be empty.");
+                MessageBox.Show("Имя пользователя или пароль не могут быть пустыми");
                 return;
             }
             string filePath = "task_manager_users.txt";
             if (!File.Exists(filePath))
             {
-                MessageBox.Show("No users found.");
+                MessageBox.Show("Пользователь не найден");
                 return;
             }
             string[] lines = File.ReadAllLines(filePath);
@@ -42,7 +42,7 @@ namespace Task_manager_v2
                     found = true;
                     if (parts[1] != password)
                     {
-                        MessageBox.Show("Incorrect password.");
+                        MessageBox.Show("Неправильный пароль");
                         return;
                     }
                     break;
@@ -50,15 +50,15 @@ namespace Task_manager_v2
             }
             if (!found)
             {
-                MessageBox.Show("Username not found.");
+                MessageBox.Show("Пользователь не найден");
                 return;
             }
             MainForm mainForm = new MainForm(username);
             mainForm.Show();
             this.Hide();
         }
-        
-    
+
+
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -66,7 +66,7 @@ namespace Task_manager_v2
             string password = textBox2.Text;
             if (username.Length == 0 || password.Length == 0)
             {
-                MessageBox.Show("Username and password cannot be empty.");
+                MessageBox.Show("Имя пользователя или пароль не могут быть пустыми");
                 return;
             }
             string filePath = "task_manager_users.txt";
@@ -80,17 +80,20 @@ namespace Task_manager_v2
                 string[] parts = line.Split(';');
                 if (parts[0] == username)
                 {
-                    MessageBox.Show("Username already exists.");
+                    MessageBox.Show("Имя пользователя уже используется");
                     return;
                 }
             }
-            File.AppendAllText(filePath, username + ";" + password + Environment.NewLine);
+            using (StreamWriter sw = File.AppendText(filePath))
+            {
+                sw.WriteLine(username + ";" + password);
+            }
             string tasksFile = username + "_tasks.txt";
             if (!File.Exists(tasksFile))
             {
                 File.Create(tasksFile);
             }
-            MessageBox.Show("User created successfully.");
-        } 
+            MessageBox.Show("Пользователь успешно создан");
+        }
     }
 }

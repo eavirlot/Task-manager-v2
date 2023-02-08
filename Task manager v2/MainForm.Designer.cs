@@ -35,6 +35,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.delete = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // add_task
@@ -94,33 +95,44 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(94, 82);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 15);
+            this.label1.Size = new System.Drawing.Size(51, 15);
             this.label1.TabIndex = 4;
-            this.label1.Text = "To_DO";
+            this.label1.Text = "Сделать";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(285, 82);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 15);
+            this.label2.Size = new System.Drawing.Size(69, 15);
             this.label2.TabIndex = 5;
-            this.label2.Text = "InProgress";
+            this.label2.Text = "В процессе";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(442, 82);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 15);
+            this.label3.Size = new System.Drawing.Size(45, 15);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Done";
+            this.label3.Text = "Готово";
+            // 
+            // delete
+            // 
+            this.delete.Location = new System.Drawing.Point(442, 245);
+            this.delete.Name = "delete";
+            this.delete.Size = new System.Drawing.Size(75, 23);
+            this.delete.TabIndex = 7;
+            this.delete.Text = "Удалить";
+            this.delete.UseVisualStyleBackColor = true;
+            this.delete.Click += new System.EventHandler(this.delete_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(697, 386);
+            this.Controls.Add(this.delete);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -129,7 +141,7 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.add_task);
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "Task manager v2";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
@@ -146,5 +158,6 @@
         private Label label1;
         private Label label2;
         private Label label3;
+        private Button delete;
     }
 }

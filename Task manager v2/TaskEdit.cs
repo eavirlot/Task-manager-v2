@@ -20,6 +20,7 @@ namespace Task_manager_v2
         private string _description;
         private bool _isEditMode;
         private string _originalTaskName;
+        
 
         public TaskEdit(string username,string status, string name, string artist, DateTime date, string description, string originalTaskName )
         {
@@ -35,6 +36,7 @@ namespace Task_manager_v2
             dateTimePicker1.Value = _date;
             textBox3.Text = _description;
             _originalTaskName = originalTaskName;
+            
         }
 
 
@@ -46,14 +48,14 @@ namespace Task_manager_v2
             string taskDescription = textBox3.Text;
             if (taskName.Length == 0 || taskArtist.Length == 0 || taskDate.Length == 0 || taskDescription.Length == 0)
             {
-                MessageBox.Show("All fields are required.");
+                MessageBox.Show("Требуется заполнить все поля");
                 return;
             }
             string filePath = _username + "_tasks.txt";
             File.AppendAllText(filePath, "to_do" + ";" + taskName + ";" + taskArtist + ";" + taskDate + ";" + taskDescription + Environment.NewLine);
-            MessageBox.Show("Task added successfully.");
-            this.Close();
-            //LoadTasks();
+            MessageBox.Show("Задача успешно создана");
+            Close();
+           
         }
 
         public bool IsEditMode
